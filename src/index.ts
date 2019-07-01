@@ -1,51 +1,46 @@
 import {
-    fromEvent, Subject, Observable, of
+    fromEvent,Observable, of
 } from 'rxjs';
 import {
-    debounceTime, distinct,
-    distinctUntilChanged, filter,
-    map,
-    multicast,
+    debounceTime, distinctUntilChanged,
+    filter,
     pluck,
-    publish,
-    refCount,
-    share,
-    switchMap,
-    take,
-    tap
+    switchMap
 } from 'rxjs/operators';
 
-// interface showItem{
-//     name: string,
-//     watchers: number,
-//     html_url: string,
-//     language: string,
-//     owner: {[key: string]: string},
-//     [key: string]: string
-// }
+export interface IShowItem{
+    name: string;
+    watchers: number;
+    html_url: string;
+    language: string;
+    owner: {[key: string]: string};
+
+    [key: string]: any;
+}
 
 const find = getCatalogs(fromEvent(document.getElementById('find') as HTMLInputElement, 'keydown'))
     .subscribe(catalogs => {
-        setItems(catalogs.items || null);
+        setItems(catalogs.items);
     })
 
 
 
-function getCatalogs(source$: Observable<any>, request$?: Observable<any>): Observable<any> {
+function getCatalogs(source$: Observable<any>): Observable<any> {
     return source$
         .pipe(
-            debounceTime(300),
+            debounceTime(500),
             pluck('target', 'value'),
             filter(v => {
                 if(!v) clearItems();
                 return !!v
             }),
-            switchMap((v) => get(v)
+            distinctUntilChanged(),
+            switchMap((v) => getFromHttp(v)
                 .catch(() => of([])))
         )
 }
 
-function get(v: string): Promise<any> {
+function getFromHttp(v: string): Promise<any> {
     return fetch(`https://api.github.com/search/repositories?q=${v}`)
         .then((res: Response) => res.json());
 }
@@ -55,7 +50,7 @@ function clearItems() {
     element.innerHTML = '<h1>Not found :(</h1>';
 }
 
-function setItems(items: any[]) {
+function setItems(items: IShowItem[]) {
     clearItems();
     const element: HTMLInputElement = document.getElementById('result') as HTMLInputElement;
     let html: string = `<div class="row">
@@ -71,7 +66,7 @@ function setItems(items: any[]) {
                     <div class="cell"><b>${item.name}</b></div>
                     <div class="cell">${item.watchers}</div>
                     <div class="cell">${item.language}</div>
-                    <div class="cell">${item.owner.login}</div>
+                    <div class="cell"><img src="${item.owner.avatar_url}"></img>${item.owner.login}</div>
                     <div class="cell"><a href='${item.html_url}' target="_blank">link</a></div>
                  </div>`;
     });

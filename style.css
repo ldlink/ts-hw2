@@ -14,3 +14,9 @@
     border: 1px solid blue;
     padding: 4px;
 }
+img{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin: 0 10px 0 0;
+}
