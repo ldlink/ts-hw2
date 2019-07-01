@@ -1,0 +1,16 @@
+#find{
+    padding: 10px;
+    margin-bottom: 20px;
+}
+#result{
+    display: table;
+    border-collapse: collapse;
+}
+#result .row{
+    display: table-row;
+}
+#result .cell{
+    display: table-cell;
+    border: 1px solid blue;
+    padding: 4px;
+}
