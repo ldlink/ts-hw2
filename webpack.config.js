@@ -13,7 +13,8 @@ module.exports = {
     },
     module: {
         rules: [
-            {test: /\.ts$/, loader: "ts-loader"}
+            {test: /\.ts$/, loader: "ts-loader"},
+            {test: /\.css$/i, use: ['css-loader']},
         ]
     },
     plugins: [

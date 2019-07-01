@@ -7,6 +7,7 @@ import {
     pluck,
     switchMap
 } from 'rxjs/operators';
+import '../style.css';
 
 export interface IShowItem{
     name: string;
