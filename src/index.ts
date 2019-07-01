@@ -1,5 +1,3 @@
-// Observable + Subscriber  = Subject
-
 import {
     fromEvent, Subject, Observable, of
 } from 'rxjs';
@@ -77,16 +75,8 @@ function setItems(items: any[]) {
                     <div class="cell"><a href='${item.html_url}' target="_blank">link</a></div>
                  </div>`;
     });
-//     name: string,
-//     watchers: number,
-//     link: string,
-//     language: string,
-//     owner: {[key: string]: string},
-//     [key: string]: string
     element.innerHTML = html;
     return;
-
-
 }
 
 
